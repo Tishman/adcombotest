@@ -24,7 +24,6 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
         presenter.configureView()
         livePhotoDataList = presenter.getLivePhoto()
         hideActivityIndicator()
-        var a = livePhotoDataList.count
     }
 
     // MARK: UICollectionViewDataSource
@@ -40,11 +39,11 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let mainCell = self.collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MainViewCell
-        let image = presenter.getPriviewImage(with: livePhotoDataList[indexPath.row].smallUrl)
-        DispatchQueue.main.async {
-            mainCell.photo.image = image
-        }
-        
+        presenter.getPriviewImage(urlString: livePhotoDataList[indexPath.row].smallUrl) { (result) in
+            DispatchQueue.main.async {
+                mainCell.photo.image = result
+            }
+        }        
         return mainCell
     }
     

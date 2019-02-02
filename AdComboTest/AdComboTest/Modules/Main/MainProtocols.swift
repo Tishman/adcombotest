@@ -15,14 +15,14 @@ protocol MainConfiguratorProtocol: class {
 
 protocol MainInteractorProtocol: class {
     func getLivePhoto() -> [LivePhoto]
-    func getPreviewImage(with urlString: String) -> UIImage
+    func getPreviewImage(urlString: String, completionHandler: @escaping ((UIImage) -> Void))
 }
 
 protocol MainPresenterProtocol: class {
     var router: MainRouterProtocol! { set get }
     func configureView()
     func getLivePhoto() -> [LivePhoto]
-    func getPriviewImage(with urlString: String) -> UIImage
+    func getPriviewImage(urlString: String, completionHandler: @escaping ((UIImage) -> Void))
 }
 
 protocol MainRouterProtocol: class  {

@@ -11,7 +11,7 @@ import Foundation
 protocol PhotoServiceProtocol {
     static func getLivePhotos(completionHandler: @escaping (([LivePhoto]) -> Void))
     
-    static func getPreviewImageData(completionHandler: @escaping ((Data?) -> Void), previewPhotoUrlString: String)
+    static func getPreviewImageData(previewPhotoUrlString: String, completionHandler: @escaping ((Data?) -> Void))
 }
 
 class PhotoService: PhotoServiceProtocol {
@@ -37,22 +37,13 @@ class PhotoService: PhotoServiceProtocol {
         semaphore.wait()
     }
     
-    static func getPreviewImageData(completionHandler: @escaping ((Data?) -> Void), previewPhotoUrlString: String) {
+    static func getPreviewImageData(previewPhotoUrlString: String, completionHandler: @escaping ((Data?) -> Void)) {
         guard let previewImageUrl = URL(string: previewPhotoUrlString) else { return }
         
         URLSession.shared.dataTask(with: previewImageUrl) { (data, response, error) in
             guard let data = data else { return }
             completionHandler(data)
         }.resume()
-        
-        /*DispatchQueue.global().async {
-            do {
-                let previewPhotoData = try Data(contentsOf: previewImageUrl)
-                completionHandler(previewPhotoData)
-            } catch {
-                completionHandler(nil)
-            }
-        }*/
     }
     
     

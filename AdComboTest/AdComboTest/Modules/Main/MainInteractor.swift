@@ -26,16 +26,16 @@ class MainInteractor: MainInteractorProtocol {
         return livePhotos
     }
     
-    func getPreviewImage(with urlString: String) -> UIImage {
+    func getPreviewImage(urlString: String, completionHandler: @escaping ((UIImage) -> Void)) {
         var previewImageData: Data?
         
-        PhotoService.getPreviewImageData(completionHandler: { (result) in
+        PhotoService.getPreviewImageData(previewPhotoUrlString: urlString,completionHandler: { (result) in
             previewImageData = result
-        }, previewPhotoUrlString: urlString)
-        
-        if let previewImageData = previewImageData {
-            guard let image = UIImage(data: previewImageData) else { return UIImage(named: "No_image.svg")! }
-            return image
-        } else { return UIImage(named: "No_image.svg")! }
+            if let previewImageData = previewImageData {
+                completionHandler(UIImage(data: previewImageData)!)
+            } else {
+                completionHandler(UIImage(named: "No_image.svg")!)
+            }
+        })
     }
 }
