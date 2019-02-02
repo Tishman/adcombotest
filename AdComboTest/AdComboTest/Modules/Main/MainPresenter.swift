@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class MainPresenter: MainPresenterProtocol {
 
@@ -22,7 +23,11 @@ class MainPresenter: MainPresenterProtocol {
         
     }
     
-    func getLivePhotoData() {
-        
+    func getLivePhoto() -> [LivePhoto] {
+        return interactor.getLivePhoto()
+    }
+    
+    func getPriviewImage(with urlString: String) -> UIImage {
+        return interactor.getPreviewImage(with: urlString)
     }
 }

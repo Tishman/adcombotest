@@ -18,11 +18,13 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
-        //showAcitvityIndicator()
+        showAcitvityIndicator()
         configurator.configure(with: self)
         presenter.configureView()
+        livePhotoDataList = presenter.getLivePhoto()
+        hideActivityIndicator()
+        var a = livePhotoDataList.count
     }
 
     // MARK: UICollectionViewDataSource
@@ -33,15 +35,17 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return livePhotoDataList.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
-        // Configure the cell
-    
-        return cell
+        let mainCell = self.collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MainViewCell
+        let image = presenter.getPriviewImage(with: livePhotoDataList[indexPath.row].smallUrl)
+        DispatchQueue.main.async {
+            mainCell.photo.image = image
+        }
+        
+        return mainCell
     }
     
     // MARK: MainViewProtocol Methods
@@ -50,12 +54,13 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
         let container: UIView = UIView()
         container.frame = self.view.frame
         container.center = self.view.center
-        container.backgroundColor = UIColor(displayP3Red: 255, green: 255, blue: 255, alpha: 0.3)
+        container.tag = 100
+        container.backgroundColor = UIColor.blue
         
         let loadingView: UIView = UIView()
         loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
         loadingView.center = self.view.center
-        loadingView.backgroundColor = UIColor.white
+        loadingView.backgroundColor = UIColor.darkGray
         loadingView.clipsToBounds = true
         loadingView.layer.cornerRadius = 10
         
@@ -66,7 +71,15 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
         
         loadingView.addSubview(actInd)
         container.addSubview(loadingView)
-        self.collectionView.addSubview(container)
+        self.view.addSubview(container)
         actInd.startAnimating()
+    }
+    
+    func hideActivityIndicator() {
+        if let viewWithTag = self.view.viewWithTag(100) {
+            viewWithTag.removeFromSuperview()
+        }else{
+            print("No!")
+        }
     }
 }

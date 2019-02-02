@@ -7,20 +7,22 @@
 //
 
 import Foundation
+import UIKit
 
 protocol MainConfiguratorProtocol: class {
     func configure (with viewController: MainViewController)
 }
 
 protocol MainInteractorProtocol: class {
-    func getAllLivePhotos()
-    func getPreviewImage()
+    func getLivePhoto() -> [LivePhoto]
+    func getPreviewImage(with urlString: String) -> UIImage
 }
 
 protocol MainPresenterProtocol: class {
     var router: MainRouterProtocol! { set get }
     func configureView()
-    func getLivePhotoData()
+    func getLivePhoto() -> [LivePhoto]
+    func getPriviewImage(with urlString: String) -> UIImage
 }
 
 protocol MainRouterProtocol: class  {
@@ -28,4 +30,5 @@ protocol MainRouterProtocol: class  {
 
 protocol MainViewProtocol: class {
     func showAcitvityIndicator()
+    func hideActivityIndicator()
 }

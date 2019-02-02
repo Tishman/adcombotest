@@ -12,12 +12,4 @@ class MainViewCell: UICollectionViewCell {
     
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var saveOptionLabel: UILabel!
-    
-    func updateCell() {
-        
-    }
-    
-    func setUpCellStyle() {
-        
-    }
 }

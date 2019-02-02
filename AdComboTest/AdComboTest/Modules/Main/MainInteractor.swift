@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class MainInteractor: MainInteractorProtocol {
     
@@ -16,11 +17,25 @@ class MainInteractor: MainInteractorProtocol {
         self.presenter = presenter
     }
     
-    func getAllLivePhotos() {
+    func getLivePhoto() -> [LivePhoto] {
+        var livePhotos: [LivePhoto] = []
         
+        PhotoService.getLivePhotos { (result) in
+            livePhotos = result
+        }
+        return livePhotos
     }
     
-    func getPreviewImage() {
+    func getPreviewImage(with urlString: String) -> UIImage {
+        var previewImageData: Data?
         
+        PhotoService.getPreviewImageData(completionHandler: { (result) in
+            previewImageData = result
+        }, previewPhotoUrlString: urlString)
+        
+        if let previewImageData = previewImageData {
+            guard let image = UIImage(data: previewImageData) else { return UIImage(named: "No_image.svg")! }
+            return image
+        } else { return UIImage(named: "No_image.svg")! }
     }
 }
