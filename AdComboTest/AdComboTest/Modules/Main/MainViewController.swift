@@ -10,7 +10,6 @@ import UIKit
 
 private let reuseIdentifier = "PreviewPhotoCell"
 
-
 class MainViewController: UICollectionViewController, MainViewProtocol {
 
     var presenter: MainPresenterProtocol!
@@ -23,7 +22,6 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
         
         configurator.configure(with: self)
         presenter.configureView()
-        livePhotoDataList = presenter.getLivePhoto()
     }
     
     // MARK: - UICollectionViewDataSource
@@ -38,6 +36,7 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let mainCell = self.collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MainViewCell
+        mainCell.layer.cornerRadius = 5
         presenter.getImageData(urlString: livePhotoDataList[indexPath.row].smallUrl) { (result) in
             DispatchQueue.main.async {
                 mainCell.photo.image = result
@@ -52,39 +51,11 @@ class MainViewController: UICollectionViewController, MainViewProtocol {
     
     // MARK: - MainViewProtocol Methods
     
-    func showAcitvityIndicator() {
-        let container: UIView = UIView()
-        container.frame = self.view.frame
-        container.center = self.view.center
-        container.tag = 100
-        container.backgroundColor = UIColor.init(red: 255, green: 255, blue: 255, alpha: 0.3)
-        
-        let loadingView: UIView = UIView()
-        loadingView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-        loadingView.center = self.view.center
-        loadingView.backgroundColor = UIColor.gray
-        loadingView.clipsToBounds = true
-        loadingView.layer.cornerRadius = 10
-        
-        let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
-        activityIndicator.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        activityIndicator.style = .gray
-        activityIndicator.center = CGPoint(x: loadingView.frame.size.width / 2, y: loadingView.frame.size.height / 2)
-        
-        loadingView.addSubview(activityIndicator)
-        container.addSubview(loadingView)
-        self.view.addSubview(container)
-        activityIndicator.startAnimating()
-    }
-    
-    func hideActivityIndicator() {
-        if let viewWithTag = self.view.viewWithTag(100) {
-            viewWithTag.removeFromSuperview()
-        }else{
-            print("No!")
+    func getLivePhotoList() {
+        presenter.getLivePhoto { (livePhotoList) in
+            self.livePhotoDataList = livePhotoList
         }
     }
-    
     // MARK: - Navigation Methods
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -25,6 +25,7 @@ class DownloadService: DownloadServiceProtocol {
         guard let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         let destinationFileUrl = documentsUrl.appendingPathComponent("downloadedFile" + fileType.rawValue)
         let downloadUrl = URL(string: downloadUrlString)!
+        
         URLSession.shared.downloadTask(with: downloadUrl) { (localUrl, response, error) in
             do {
                 guard let localUrl = localUrl else { return }

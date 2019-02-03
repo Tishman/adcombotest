@@ -14,14 +14,14 @@ protocol MainConfiguratorProtocol: class {
 }
 
 protocol MainInteractorProtocol: class {
-    func getLivePhoto() -> [LivePhoto]
+    func getLivePhoto(completionHandler: @escaping (([LivePhoto]) -> Void))
     func getImageData(urlString: String, completionHandler: @escaping ((UIImage) -> Void))
 }
 
 protocol MainPresenterProtocol: class {
     var router: MainRouterProtocol! { set get }
     func configureView()
-    func getLivePhoto() -> [LivePhoto]
+    func getLivePhoto(completionHandler: @escaping (([LivePhoto]) -> Void))
     func getImageData(urlString: String, completionHandler: @escaping ((UIImage) -> Void))
 }
 
@@ -31,6 +31,5 @@ protocol MainRouterProtocol: class  {
 }
 
 protocol MainViewProtocol: class {
-    func showAcitvityIndicator()
-    func hideActivityIndicator()
+    func getLivePhotoList()
 }

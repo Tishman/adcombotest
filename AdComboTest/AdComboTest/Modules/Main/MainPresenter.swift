@@ -19,10 +19,14 @@ class MainPresenter: MainPresenterProtocol {
         self.view = view
     }
     
-    func configureView() {}
+    func configureView() {
+        view.getLivePhotoList()
+    }
     
-    func getLivePhoto() -> [LivePhoto] {
-        return interactor.getLivePhoto()
+    func getLivePhoto(completionHandler: @escaping (([LivePhoto]) -> Void)) {
+        interactor.getLivePhoto { (result) in
+            completionHandler(result)
+        }
     }
     
     func getImageData(urlString: String, completionHandler: @escaping ((UIImage) -> Void)) {

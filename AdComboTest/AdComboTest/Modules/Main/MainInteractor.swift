@@ -10,20 +10,17 @@ import Foundation
 import UIKit
 
 class MainInteractor: MainInteractorProtocol {
-    
+
     weak var presenter: MainPresenterProtocol!
     
     required init (presenter: MainPresenterProtocol) {
         self.presenter = presenter
     }
     
-    func getLivePhoto() -> [LivePhoto] {
-        var livePhotos: [LivePhoto] = []
-        
+    func getLivePhoto(completionHandler: @escaping (([LivePhoto]) -> Void)) {
         DataService.getLivePhotos { (result) in
-            livePhotos = result
+            completionHandler(result)
         }
-        return livePhotos
     }
     
     func getImageData(urlString: String, completionHandler: @escaping ((UIImage) -> Void)) {

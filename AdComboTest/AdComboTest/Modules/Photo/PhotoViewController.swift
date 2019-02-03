@@ -14,24 +14,24 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
     
     var imageUrlString: String = ""
     var videoUrlString: String = ""
+    var createdLivePhoto: PHLivePhoto?
     var imageFileUrl: URL?
     var videoFileUrl: URL?
     var presenter: PhotoPresenterProtocol!
     let configurator: PhotoConfiguratorProtocol = PhotoConfigurator()
-    var castedLivePhoto: PHLivePhoto?
     
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet var closeButton: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    // MARK: - Overrided methods
+    // MARK: - View methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configurator.configure(with: self)
-        presenter.configureView()        
+        presenter.configureView()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -48,23 +48,39 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
         presenter.closeButtonClicked()
     }
     
-    @IBAction func startVideo(_ sender: UIButton) {
-        guard let imageFileUrl = imageFileUrl else { return }
-        guard let videoFileUrl = videoFileUrl else { return }
-        guard let previewImage = photo.image else { return }
-        makeLivePhoto(imageURL: imageFileUrl, videoURL: videoFileUrl, previewImage: previewImage) { (livePhoto) in
-            DispatchQueue.main.async {
-                let livePhotoView = PHLivePhotoView(frame: self.view.frame)
-                livePhotoView.livePhoto = livePhoto
-                self.view.addSubview(livePhotoView)
-                livePhotoView.startPlayback(with: .full)
-            }
+    @IBAction func saveLivePhotoToLibary(_ sender: UIButton) {
+        PHPhotoLibrary.requestAuthorization { status in
+            guard status == .authorized else { return }
+            
+            PHPhotoLibrary.shared().performChanges({
+                guard let imageFileUrl = self.imageFileUrl else { return }
+                let creationRequest = PHAssetCreationRequest.forAsset()
+                creationRequest.addResource(with: .photo, fileURL: imageFileUrl, options: nil)
+                
+                let options = PHAssetResourceCreationOptions()
+                options.shouldMoveFile = true
+                guard let videoFileUrl = self.videoFileUrl else { return }
+                creationRequest.addResource(with: .pairedVideo, fileURL: videoFileUrl, options: options)
+            })
         }
     }
     
     // MARK: - PhotoViewProtocol Methods
     
+    func getLivePhoto() {
+        DispatchQueue.main.async {
+            guard let imageFileUrl = self.imageFileUrl else { return }
+            guard let videoFileUrl = self.videoFileUrl else { return }
+            guard let previewImage = self.photo.image else { return }
+            self.makeLivePhoto(imageURL: imageFileUrl, videoURL: videoFileUrl, previewImage: previewImage) { (livePhoto) in
+                self.createdLivePhoto = livePhoto
+            }
+        }
+    }
+    
     func setUpViewComponents() {
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
+        self.view.addGestureRecognizer(longPressRecognizer)
         saveButton.layer.cornerRadius = saveButton.bounds.width / 2
         saveButton.isEnabled = false
         activityIndicator.startAnimating()
@@ -88,6 +104,7 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
     func downloadDataForLivePhoto() {
         presenter.downloadVideo(downloadUrlString: videoUrlString) { (url) in
             self.videoFileUrl = url
+            self.getLivePhoto()
         }
         
         presenter.downloadImage(downloadUrlString: imageUrlString) { (url) in
@@ -112,6 +129,27 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
             if let lp = livePhoto {
                 completion(lp)
             }
+        }
+    }
+    
+    @objc private func longPressed(sender: UILongPressGestureRecognizer)
+    {
+        let livePhotoView = PHLivePhotoView(frame: self.view.frame)
+        livePhotoView.tag = 100
+        livePhotoView.livePhoto = createdLivePhoto
+        switch sender.state {
+        case .began:
+            DispatchQueue.main.async {
+                self.view.addSubview(livePhotoView)
+                livePhotoView.startPlayback(with: .full)
+            }
+        case .ended:
+            if let viewWithTag = self.view.viewWithTag(100) {
+                livePhotoView.stopPlayback()
+                viewWithTag.removeFromSuperview()
+            }
+        default:
+            break
         }
     }
 }

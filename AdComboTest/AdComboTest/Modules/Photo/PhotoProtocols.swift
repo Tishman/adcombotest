@@ -13,6 +13,7 @@ protocol PhotoViewProtocol: class {
     func openImage()
     func clearFileCache()
     func setUpViewComponents()
+    func getLivePhoto()
     func downloadDataForLivePhoto()
 }
 

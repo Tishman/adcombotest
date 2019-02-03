@@ -20,10 +20,10 @@ class PhotoPresenter: PhotoPresenterProtocol {
     }
     
     func configureView() {
-        view.downloadDataForLivePhoto()
         view.clearFileCache()
         view.setUpViewComponents()
-        view.openImage()        
+        view.openImage()
+        view.downloadDataForLivePhoto()
     }
     
     func closeButtonClicked() {
