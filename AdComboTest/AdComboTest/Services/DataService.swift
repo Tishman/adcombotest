@@ -8,15 +8,17 @@
 
 import Foundation
 
-protocol PhotoServiceProtocol {
+protocol DataServiceProtocol: class {
     static func getLivePhotos(completionHandler: @escaping (([LivePhoto]) -> Void))
     
     static func getPreviewImageData(previewPhotoUrlString: String, completionHandler: @escaping ((Data?) -> Void))
 }
 
-class PhotoService: PhotoServiceProtocol {
+class DataService: DataServiceProtocol {
     
     private static let livePhotoUrlString = "https://m1.kappboom.com/livewallpapers/info?o=0&v=575"
+    
+    private init () {}
     
     static func getLivePhotos(completionHandler: @escaping (([LivePhoto]) -> Void)) {
         guard let livePhotoUrl = URL(string: livePhotoUrlString) else { return }

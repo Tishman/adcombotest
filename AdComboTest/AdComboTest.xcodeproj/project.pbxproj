@@ -18,8 +18,15 @@
 		0E8A41F82204A99E008DEBAC /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A41F72204A99E008DEBAC /* MainRouter.swift */; };
 		0E8A41FA2204A9B3008DEBAC /* MainProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A41F92204A9B3008DEBAC /* MainProtocols.swift */; };
 		0EEB41442204D1A300C0507F /* LivePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41432204D1A300C0507F /* LivePhoto.swift */; };
-		0EEB41462204DB9200C0507F /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41452204DB9200C0507F /* PhotoService.swift */; };
+		0EEB41462204DB9200C0507F /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41452204DB9200C0507F /* DataService.swift */; };
 		0EEB414A2204E49E00C0507F /* MainViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41492204E49E00C0507F /* MainViewCell.swift */; };
+		0EEB414F2206DF6100C0507F /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB414E2206DF6100C0507F /* PhotoViewController.swift */; };
+		0EEB41512206DF7400C0507F /* PhotoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41502206DF7400C0507F /* PhotoPresenter.swift */; };
+		0EEB41532206DF9100C0507F /* PhotoInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41522206DF9100C0507F /* PhotoInteractor.swift */; };
+		0EEB41552206DFA900C0507F /* PhotoConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41542206DFA900C0507F /* PhotoConfigurator.swift */; };
+		0EEB41572206DFB500C0507F /* PhotoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41562206DFB500C0507F /* PhotoRouter.swift */; };
+		0EEB41592206DFC700C0507F /* PhotoProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB41582206DFC700C0507F /* PhotoProtocols.swift */; };
+		0EEB415B220748C500C0507F /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB415A220748C500C0507F /* DownloadService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,8 +43,15 @@
 		0E8A41F72204A99E008DEBAC /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
 		0E8A41F92204A9B3008DEBAC /* MainProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainProtocols.swift; sourceTree = "<group>"; };
 		0EEB41432204D1A300C0507F /* LivePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePhoto.swift; sourceTree = "<group>"; };
-		0EEB41452204DB9200C0507F /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
+		0EEB41452204DB9200C0507F /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		0EEB41492204E49E00C0507F /* MainViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewCell.swift; sourceTree = "<group>"; };
+		0EEB414E2206DF6100C0507F /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
+		0EEB41502206DF7400C0507F /* PhotoPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPresenter.swift; sourceTree = "<group>"; };
+		0EEB41522206DF9100C0507F /* PhotoInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInteractor.swift; sourceTree = "<group>"; };
+		0EEB41542206DFA900C0507F /* PhotoConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoConfigurator.swift; sourceTree = "<group>"; };
+		0EEB41562206DFB500C0507F /* PhotoRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRouter.swift; sourceTree = "<group>"; };
+		0EEB41582206DFC700C0507F /* PhotoProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoProtocols.swift; sourceTree = "<group>"; };
+		0EEB415A220748C500C0507F /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +98,7 @@
 		0E8A41EC2204A8D8008DEBAC /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				0EEB414D2206DF2800C0507F /* Photo */,
 				0E8A41ED2204A8EE008DEBAC /* Main */,
 			);
 			path = Modules;
@@ -123,9 +138,23 @@
 		0EEB41422204C9C500C0507F /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				0EEB41452204DB9200C0507F /* PhotoService.swift */,
+				0EEB41452204DB9200C0507F /* DataService.swift */,
+				0EEB415A220748C500C0507F /* DownloadService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		0EEB414D2206DF2800C0507F /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB414E2206DF6100C0507F /* PhotoViewController.swift */,
+				0EEB41502206DF7400C0507F /* PhotoPresenter.swift */,
+				0EEB41522206DF9100C0507F /* PhotoInteractor.swift */,
+				0EEB41542206DFA900C0507F /* PhotoConfigurator.swift */,
+				0EEB41562206DFB500C0507F /* PhotoRouter.swift */,
+				0EEB41582206DFC700C0507F /* PhotoProtocols.swift */,
+			);
+			path = Photo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,15 +229,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				0E8A41DB2204A076008DEBAC /* AppDelegate.swift in Sources */,
+				0EEB415B220748C500C0507F /* DownloadService.swift in Sources */,
 				0E8A41F22204A95D008DEBAC /* MainPresenter.swift in Sources */,
-				0EEB41462204DB9200C0507F /* PhotoService.swift in Sources */,
+				0EEB41572206DFB500C0507F /* PhotoRouter.swift in Sources */,
+				0EEB41462204DB9200C0507F /* DataService.swift in Sources */,
 				0E8A41FA2204A9B3008DEBAC /* MainProtocols.swift in Sources */,
 				0E8A41F02204A938008DEBAC /* MainViewController.swift in Sources */,
+				0EEB41532206DF9100C0507F /* PhotoInteractor.swift in Sources */,
+				0EEB41512206DF7400C0507F /* PhotoPresenter.swift in Sources */,
 				0EEB414A2204E49E00C0507F /* MainViewCell.swift in Sources */,
 				0EEB41442204D1A300C0507F /* LivePhoto.swift in Sources */,
 				0E8A41F42204A978008DEBAC /* MainInteractor.swift in Sources */,
 				0E8A41F62204A98C008DEBAC /* MainConfigurator.swift in Sources */,
+				0EEB41552206DFA900C0507F /* PhotoConfigurator.swift in Sources */,
 				0E8A41F82204A99E008DEBAC /* MainRouter.swift in Sources */,
+				0EEB41592206DFC700C0507F /* PhotoProtocols.swift in Sources */,
+				0EEB414F2206DF6100C0507F /* PhotoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

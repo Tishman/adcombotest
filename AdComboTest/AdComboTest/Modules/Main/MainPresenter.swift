@@ -25,8 +25,8 @@ class MainPresenter: MainPresenterProtocol {
         return interactor.getLivePhoto()
     }
     
-    func getPriviewImage(urlString: String, completionHandler: @escaping ((UIImage) -> Void)) {
-        interactor.getPreviewImage(urlString: urlString) { (result) in
+    func getImageData(urlString: String, completionHandler: @escaping ((UIImage) -> Void)) {
+        interactor.getImageData(urlString: urlString) { (result) in
             completionHandler(result)
         }
     }

@@ -20,18 +20,15 @@ class MainInteractor: MainInteractorProtocol {
     func getLivePhoto() -> [LivePhoto] {
         var livePhotos: [LivePhoto] = []
         
-        PhotoService.getLivePhotos { (result) in
+        DataService.getLivePhotos { (result) in
             livePhotos = result
         }
         return livePhotos
     }
     
-    func getPreviewImage(urlString: String, completionHandler: @escaping ((UIImage) -> Void)) {
-        var previewImageData: Data?
-        
-        PhotoService.getPreviewImageData(previewPhotoUrlString: urlString,completionHandler: { (result) in
-            previewImageData = result
-            if let previewImageData = previewImageData {
+    func getImageData(urlString: String, completionHandler: @escaping ((UIImage) -> Void)) {
+        DataService.getPreviewImageData(previewPhotoUrlString: urlString,completionHandler: { (result) in
+            if let previewImageData = result {
                 completionHandler(UIImage(data: previewImageData)!)
             } else {
                 completionHandler(UIImage(named: "No_image.svg")!)
