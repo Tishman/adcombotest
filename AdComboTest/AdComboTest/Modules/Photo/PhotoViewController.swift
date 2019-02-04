@@ -12,6 +12,7 @@ import PhotosUI
 
 class PhotoViewController: UIViewController, PhotoViewProtocol {
     
+    
     var imageUrlString: String = ""
     var videoUrlString: String = ""
     var createdLivePhoto: PHLivePhoto?
@@ -19,6 +20,7 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
     var videoFileUrl: URL?
     var presenter: PhotoPresenterProtocol!
     let configurator: PhotoConfiguratorProtocol = PhotoConfigurator()
+    var livePhotoView: PHLivePhotoView?
     
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var saveButton: UIButton!
@@ -49,6 +51,12 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
     }
     
     @IBAction func saveLivePhotoToLibary(_ sender: UIButton) {
+        presenter.saveButtonClicked()
+    }
+    
+    // MARK: - PhotoViewProtocol Methods
+    
+    func saveButtonClicked(){
         PHPhotoLibrary.requestAuthorization { status in
             guard status == .authorized else { return }
             
@@ -63,9 +71,12 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
                 creationRequest.addResource(with: .pairedVideo, fileURL: videoFileUrl, options: options)
             })
         }
+        let alertController = UIAlertController(title: "Saved", message: "Image saved to Photo library", preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
     }
-    
-    // MARK: - PhotoViewProtocol Methods
     
     func getLivePhoto() {
         DispatchQueue.main.async {
@@ -79,8 +90,10 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
     }
     
     func setUpViewComponents() {
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
-        self.view.addGestureRecognizer(longPressRecognizer)
+        if traitCollection.forceTouchCapability != UIForceTouchCapability.unavailable {
+            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
+            self.view.addGestureRecognizer(longPressRecognizer)
+        }
         saveButton.layer.cornerRadius = saveButton.bounds.width / 2
         saveButton.isEnabled = false
         activityIndicator.startAnimating()
@@ -105,6 +118,9 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
         presenter.downloadVideo(downloadUrlString: videoUrlString) { (url) in
             self.videoFileUrl = url
             self.getLivePhoto()
+            DispatchQueue.main.async {
+                self.saveButton.isEnabled = true
+            }
         }
         
         presenter.downloadImage(downloadUrlString: imageUrlString) { (url) in
@@ -117,7 +133,6 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
             DispatchQueue.main.async {
                 self.photo.image = result
                 self.activityIndicator.stopAnimating()
-                self.saveButton.isEnabled = true
             }
         }
     }
@@ -132,21 +147,56 @@ class PhotoViewController: UIViewController, PhotoViewProtocol {
         }
     }
     
+    // MARK: - Touch methods
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            if #available(iOS 9.0, *) {
+                if traitCollection.forceTouchCapability == UIForceTouchCapability.available {
+                    print("force touch")
+                    let viewWithTag = self.view.viewWithTag(100)
+                    if viewWithTag == nil {
+                        if touch.force == touch.maximumPossibleForce {
+                            livePhotoView = PHLivePhotoView(frame: self.view.frame)
+                            livePhotoView!.tag = 100
+                            livePhotoView!.livePhoto = createdLivePhoto
+                            self.view.addSubview(livePhotoView!)
+                            livePhotoView!.startPlayback(with: .full)
+                        } else {
+                            if let viewWithTag = self.view.viewWithTag(100) {
+                                viewWithTag.removeFromSuperview()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for subView in self.view.subviews {
+            if subView.tag == 100{
+            subView.removeFromSuperview()
+            }
+        }
+    }
+    
     @objc private func longPressed(sender: UILongPressGestureRecognizer)
     {
+        print("long touch")
         let livePhotoView = PHLivePhotoView(frame: self.view.frame)
         livePhotoView.tag = 100
         livePhotoView.livePhoto = createdLivePhoto
+        
         switch sender.state {
         case .began:
-            DispatchQueue.main.async {
-                self.view.addSubview(livePhotoView)
-                livePhotoView.startPlayback(with: .full)
-            }
+            self.view.addSubview(livePhotoView)
+            livePhotoView.startPlayback(with: .full)
         case .ended:
-            if let viewWithTag = self.view.viewWithTag(100) {
-                livePhotoView.stopPlayback()
-                viewWithTag.removeFromSuperview()
+            for subView in self.view.subviews {
+                if subView.tag == 100{
+                    subView.removeFromSuperview()
+                }
             }
         default:
             break

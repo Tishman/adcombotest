@@ -26,6 +26,10 @@ class PhotoPresenter: PhotoPresenterProtocol {
         view.downloadDataForLivePhoto()
     }
     
+    func saveButtonClicked() {
+        view.saveButtonClicked()
+    }
+    
     func closeButtonClicked() {
         router.closeCurrentViewController()
     }

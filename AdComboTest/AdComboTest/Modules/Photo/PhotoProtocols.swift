@@ -11,14 +11,16 @@ import UIKit
 
 protocol PhotoViewProtocol: class {
     func openImage()
+    func getLivePhoto()
     func clearFileCache()
     func setUpViewComponents()
-    func getLivePhoto()
+    func saveButtonClicked()
     func downloadDataForLivePhoto()
 }
 
 protocol PhotoPresenterProtocol: class {
     func configureView()
+    func saveButtonClicked()
     func closeButtonClicked()
     func getImageData(urlString: String, completionHandler: @escaping ((UIImage) -> Void))
     func downloadImage(downloadUrlString: String, completionHandler: @escaping ((URL) -> Void))
